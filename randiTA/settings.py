@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,10 +101,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'id'
 
 TIME_ZONE = 'UTC'
 
@@ -116,3 +118,43 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', # Pastikan ini menunjuk ke folder static di level project
+]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Admin Gerai Buah ARB",
+    "site_header": "Admin Gerai Buah ARB",
+    "site_brand": "Gerai Buah ARB",
+    "welcome_sign": "Gerai Buah ARB Admin",
+    "goodbye_sign": "Terima Kasih Telah Berkunjung, Sampai Jumpa Kembali",
+
+    "site_logo": "img/fruits.png",
+     "order_with_respect_to": [
+        "core.Buah",         # Posisi 1
+        "core.Pelanggan",     # Posisi 2
+        "core.Pembelian",     # Posisi 3
+        "core.DetailPembelian",     # Posisi 4
+        "core.Pemasok",   # Posisi 5
+        "core.Pengadaan",     # Posisi 6
+        "core.DetailPengadaan",     # Posisi 7
+    ],
+
+     "icons": {
+        # "auth": "fas fa-users-cog",
+        # "auth.user": "fas fa-user",
+        # "auth.Group": "fas fa-users",
+        "Core.Mahasiswa": "fas fa-user-graduate",
+        "Core.Dosen": "fas fa-chalkboard-teacher",
+        "Core.JadwalUjian": "fas fa-calendar-alt",
+        "core.Buah": "fa-solid fa-apple-whole",    # Posisi 1
+        "core.Pelanggan": "fa-solid fa-user-group",     # Posisi 2
+        "core.Pembelian": "fa-solid fa-cart-shopping",     # Posisi 3
+        "core.DetailPembelian": "fa-solid fa-cart-shopping",     # Posisi 4
+        "core.Pemasok": "fa-solid fa-address-book",   # Posisi 5
+        "core.Pengadaan": "fa-solid fa-truck",     # Posisi 6
+        "core.DetailPengadaan": "fa-solid fa-truck",     # Posisi 7
+    },
+    "show_ui_builder":"True",
+}
