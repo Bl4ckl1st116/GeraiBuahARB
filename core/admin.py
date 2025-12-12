@@ -8,23 +8,38 @@ admin.site.unregister(Group)
 # from .models import Admin
 # admin.site.register(Admin)
 
-from .models import Buah
-admin.site.register(Buah)
+class BuahAdmin(admin.ModelAdmin):
+    list_display = ('idBuah', 'namaBuah', 'stokBuah', 'hargaBuah')
+    search_fields = ('namaBuah',)
+    list_filter = ('hargaBuah',)
+admin.site.register(Buah, BuahAdmin)
 
-from .models import Pelanggan
-admin.site.register(Pelanggan)
+class PelangganAdmin(admin.ModelAdmin):
+    list_display = ('idPelanggan', 'namaPelanggan', 'noHp')
+    search_fields = ('namaPelanggan', 'noHp')
+admin.site.register(Pelanggan, PelangganAdmin)
 
-from .models import Pembelian
-admin.site.register(Pembelian)
+class PembelianAdmin(admin.ModelAdmin):
+    list_display = ('idPembelian', 'idPelanggan', 'tanggalPembelian', 'totalHargaPembelian')
+    search_fields = ('idPelanggan__namaPelanggan',)
+    list_filter = ('tanggalPembelian',)
+admin.site.register(Pembelian, PembelianAdmin)
 
-from .models import DetailPembelian
-admin.site.register(DetailPembelian)
+class DetailPembelianAdmin(admin.ModelAdmin):
+    list_display = ('idDetailPembelian', 'idPembelian', 'idBuah', 'kuantitas', 'subHarga')
+    search_fields = ('idPembelian__idPembelian', 'idBuah__namaBuah')
+admin.site.register(DetailPembelian, DetailPembelianAdmin)
 
-from .models import Pemasok
-admin.site.register(Pemasok)
+class PemasokAdmin(admin.ModelAdmin):
+    list_display = ('idPemasok', 'namaPemasok', 'noHp')
+    search_fields = ('namaPemasok',)
+admin.site.register(Pemasok, PemasokAdmin)
 
-from .models import Pengadaan
-admin.site.register(Pengadaan)
+class PengadaanAdmin(admin.ModelAdmin):
+    list_display = ('idPengadaan', 'totalHarga')
+admin.site.register(Pengadaan, PengadaanAdmin)
 
-from .models import DetailPengadaan
-admin.site.register(DetailPengadaan)
+class DetailPengadaanAdmin(admin.ModelAdmin):
+    list_display = ('idDetailPengadaan', 'idPengadaan', 'idBuah', 'kuantitas', 'subHarga')
+    search_fields = ('idPengadaan__idPengadaan', 'idBuah__namaBuah')
+admin.site.register(DetailPengadaan, DetailPengadaanAdmin)

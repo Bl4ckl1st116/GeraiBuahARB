@@ -1,0 +1,122 @@
+{% extends "core/index.html" %} {% load humanize %} {% load static %}
+
+<!-- Spinner Start -->
+<div
+  id="spinner"
+  class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50 d-flex align-items-center justify-content-center"
+>
+  <div class="spinner-grow text-primary" role="status"></div>
+</div>
+<!-- Spinner End -->
+
+{% block content %}
+
+<!-- Fruits Shop Start-->
+<div class="container-fluid fruite vesitable py-5">
+  <div class="container py-5 mt-5">
+    <h1 class="mb-4 mt-5">Katalog Buah</h1>
+
+    <div class="owl-carousel vegetable-carousel justify-content-center">
+      {% for b in buah_list %}
+      <div
+        class="border border-primary rounded position-relative vesitable-item"
+      >
+        <div class="vesitable-img">
+          <img
+            src="{{ b.fotoBuah.url }}"
+            class="img-fluid w-100 rounded-top"
+            alt="{{ b.namaBuah }}"
+          />
+        </div>
+
+        <div
+          class="text-white bg-primary px-3 py-1 rounded position-absolute"
+          style="top: 10px; right: 10px"
+        >
+          Fruits
+        </div>
+
+        <div class="p-4 rounded-bottom">
+          <h4>{{ b.namaBuah }}</h4>
+          <p>{{ b.deskripsiBuah }}</p>
+
+          <div class="d-flex justify-content-between flex-lg-wrap">
+            <p class="text-dark fs-5 fw-bold mb-0">
+              Rp. {{ b.hargaBuah|intcomma }}
+            </p>
+
+            <a
+              href="#"
+              class="btn border border-secondary rounded-pill px-3 text-primary"
+            >
+              <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+
+     <!-- Single Page Header start -->
+        <div class="container-fluid page-header py-5">
+            <h1 class="text-center text-white display-6">Semua Buah</h1>
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{%  url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item active text-white">Katalog Buah</li>
+            </ol>
+        </div>
+        <!-- Single Page Header End -->
+
+  <div class="tab-content mt-5">
+    <div id="tab-1" class="tab-pane fade show p-0 active">
+      <div class="row g-4">
+        <div class="col-lg-12">
+          <div class="row g-4">
+            {% for b in buah_list %}
+            <div class="col-md-6 col-lg-4 col-xl-3">
+              <div class="rounded position-relative fruite-item">
+                <div class="fruite-img">
+                  <img
+                    src="{{ b.fotoBuah.url }}"
+                    class="img-fluid w-100 rounded-top"
+                    alt="{{ b.namaBuah }}"
+                  />
+                </div>
+                <div
+                  class="text-white bg-secondary px-3 py-1 rounded position-absolute"
+                  style="top: 10px; left: 10px"
+                >
+                  Fruits
+                </div>
+                <div
+                  class="p-4 border border-secondary border-top-0 rounded-bottom"
+                >
+                  <h4>{{ b.namaBuah }}</h4>
+                  <p>{{b.deskripsiBuah}}</p>
+                  <div class="d-flex justify-content-between flex-lg-wrap">
+                    <p class="text-dark fs-5 fw-bold mb-0">
+                      Rp. {{ b.hargaBuah|intcomma }}
+                    </p>
+                    <a
+                      href="#"
+                      class="btn border border-secondary rounded-pill px-3 text-primary"
+                      ><i class="fa fa-shopping-bag me-2 text-primary"></i> Add
+                      to cart</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Fruits Shop End-->
+  </div>
+
+{% endblock content %}

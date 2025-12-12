@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'core',
 ]
 
@@ -116,13 +117,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
-
+import os
 STATIC_URL = 'static/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static', # Pastikan ini menunjuk ke folder static di level project
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 JAZZMIN_SETTINGS = {
     "site_title": "Admin Gerai Buah ARB",
     "site_header": "Admin Gerai Buah ARB",

@@ -23,6 +23,9 @@ class Pelanggan(models.Model):
     alamat = models.TextField()
     noHp = models.CharField(max_length=12)
 
+    class Meta:
+        verbose_name_plural = "Pelanggan"
+
     def __str__(self):
         return f"{self.namaPelanggan} - {self.username}"
 
@@ -38,6 +41,9 @@ class Buah(models.Model):
     diskon = models.DecimalField(max_digits=3, decimal_places=2, default=0, null=True, blank=True)  # dalam persen
     lamaKesegaraan = models.IntegerField()  # dalam hari max_length=2
    # tanggalKadaluarsa = models.DateField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = "Buah"
 
     @property
     def stokBuah(self):
@@ -78,6 +84,9 @@ class Pembelian(models.Model):
 
     stok_dikembalikan = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name_plural = "Pembelian"
+
 
     def update_total(self):
         total = self.detailpembelian_set.aggregate(total=Sum('subHarga'))['total'] or 0
@@ -117,6 +126,9 @@ class DetailPembelian(models.Model):
 
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name_plural = "Detail Pembelian"
+
 
     def __str__(self):
         return f"Detail Pembelian {self.idDetailPembelian} - ID:{self.idPembelian} - Buah: {self.idBuah.namaBuah} - Kuantitas: {self.kuantitas} kilo - Subtotal: {self.subHarga} ribu"
@@ -126,6 +138,9 @@ class Pemasok(models.Model):
     namaPemasok = models.CharField(max_length=70)
     noHp = models.CharField(max_length=12)
     alamat = models.TextField()
+
+    class Meta:
+        verbose_name_plural = "Pemasok"
 
     def __str__(self):
         return f"{self.namaPemasok} - {self.noHp}"
@@ -139,6 +154,9 @@ class Pengadaan(models.Model):
         total = self.detailpengadaan_set.aggregate(total=Sum('subHarga'))['total'] or 0
         self.totalHarga = total
         self.save(update_fields=['totalHarga'])
+
+    class Meta:
+        verbose_name_plural = "Pengadaan"
 
 
     def __str__(self):
@@ -164,6 +182,9 @@ class DetailPengadaan(models.Model):
     idPengadaan = models.ForeignKey(Pengadaan, on_delete=models.CASCADE)
     # idBuah = models.ForeignKey(Buah, on_delete=models.CASCADE)
     idBuah = models.ForeignKey(Buah, on_delete=models.CASCADE, related_name="detail_pengadaan")
+
+    class Meta:
+        verbose_name_plural = "Detail Pengadaan"
 
     def __str__(self):
         return f"Detail Pengadaan {self.idDetailPengadaan} - ID:{self.idPengadaan} - Buah: {self.idBuah.namaBuah} - Kuantitas: {self.kuantitas} kilo - Subtotal: {self.subHarga} ribu"
