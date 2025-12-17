@@ -59,12 +59,13 @@ class Buah(models.Model):
         return None
 
     def __str__(self):
-        return f"{self.namaBuah} - Rp{self.hargaBuah} - Stok: {self.stokBuah} kilo - Diskon: {self.diskon}% - Kadaluarsa: {self.tanggalKadaluarsa}"
+        return f"{self.namaBuah} - Rp{self.hargaBuah} - Stok: {self.stokBuah} kilo"
     
 class Pembelian(models.Model):
     idPembelian = models.AutoField(primary_key=True)
+    idPelanggan = models.ForeignKey(Pelanggan, on_delete=models.CASCADE)    
     totalBuah = models.IntegerField(default=0)  # dalam kilogram max_length=5
-    totalHargaPembelian = models.DecimalField(max_digits=8, decimal_places=2, default=0)  # dalam ribu rupiah 
+    totalHargaPembelian = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # dalam ribu rupiah 
     tipeBayar =[
         ('COD', 'COD'),
         ('Transfer Bank BRI', 'Transfer Bank BRI'),
@@ -80,7 +81,7 @@ class Pembelian(models.Model):
     statusPembelian = models.CharField(max_length=10, choices=statsBayar, default='Menunggu')
     buktiBayar = models.ImageField(upload_to='bukti_bayar/', null=True, blank=True)
     tanggalPembelian = models.DateTimeField(auto_now_add=True)
-    idPelanggan = models.ForeignKey(Pelanggan, on_delete=models.CASCADE)       
+       
 
     stok_dikembalikan = models.BooleanField(default=False)
 
@@ -105,14 +106,15 @@ class Pembelian(models.Model):
 
 
     def __str__(self):
-        return f"Pembelian {self.idPembelian} - Total: {self.totalHargaPembelian} ribu - Status: {self.statusPembelian}"
+        return f"Pembelian {self.idPembelian} - Pelanggan: {self.idPelanggan.namaPelanggan} - Total: {self.totalHargaPembelian} ribu"
         
 class DetailPembelian(models.Model):
     idDetailPembelian = models.AutoField(primary_key=True)
-    kuantitas = models.IntegerField()  # max_length=4
-    subHarga = models.DecimalField(max_digits=8, decimal_places=2, default=0)  # dalam ribu rupiah
     idPembelian = models.ForeignKey(Pembelian, on_delete=models.CASCADE)
     idBuah = models.ForeignKey(Buah, on_delete=models.CASCADE)
+    kuantitas = models.IntegerField()  # max_length=4
+    subHarga = models.DecimalField(max_digits=9, decimal_places=2, default=0)  # dalam ribu rupiah
+    
 
     def save(self, *args, **kwargs):
         # Hitung otomatis harga buah x kuantitas
@@ -131,7 +133,7 @@ class DetailPembelian(models.Model):
 
 
     def __str__(self):
-        return f"Detail Pembelian {self.idDetailPembelian} - ID:{self.idPembelian} - Buah: {self.idBuah.namaBuah} - Kuantitas: {self.kuantitas} kilo - Subtotal: {self.subHarga} ribu"
+        return f"Detail Pembelian {self.idDetailPembelian} - ID: {self.idPembelian} - Buah: {self.idBuah.namaBuah} - Kuantitas: {self.kuantitas} kilo - Subtotal: {self.subHarga} ribu"
         
 class Pemasok(models.Model):
     idPemasok = models.AutoField(primary_key=True)
@@ -147,8 +149,9 @@ class Pemasok(models.Model):
 
 class Pengadaan(models.Model):
     idPengadaan = models.AutoField(primary_key=True)
-    totalHarga = models.DecimalField(max_digits=8, decimal_places=2, default=0)  # dalam ribu rupiah
     idPemasok = models.ForeignKey(Pemasok, on_delete=models.CASCADE)
+    totalHarga = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # dalam ribu rupiah
+    
 
     def update_total(self):
         total = self.detailpengadaan_set.aggregate(total=Sum('subHarga'))['total'] or 0
@@ -160,10 +163,13 @@ class Pengadaan(models.Model):
 
 
     def __str__(self):
-        return f"Pengadaan {self.idPengadaan} - Total Harga: {self.totalHarga} ribu"
+        return f"Pengadaan {self.idPengadaan}  - Pemasok: {self.idPemasok.namaPemasok} - Total Harga: {self.totalHarga} ribu"
     
 class DetailPengadaan(models.Model):
     idDetailPengadaan = models.AutoField(primary_key=True)
+    idPengadaan = models.ForeignKey(Pengadaan, on_delete=models.CASCADE)
+    # idBuah = models.ForeignKey(Buah, on_delete=models.CASCADE)
+    idBuah = models.ForeignKey(Buah, on_delete=models.CASCADE, related_name="detail_pengadaan")
     kuantitas = models.IntegerField()  # max_length=4
     # tipekuantitass = [
     #     ('perkilo', 'perkilo'),
@@ -172,16 +178,14 @@ class DetailPengadaan(models.Model):
     #     ('perbox', 'perbox'),
     # ]
     # tipeKuantitas = models.CharField(max_length=10, choices=tipekuantitass, default='perkilo')
-    subHarga = models.DecimalField(max_digits=8, decimal_places=2)  # dalam ribu rupiah
+    subHarga = models.DecimalField(max_digits=9, decimal_places=2)  # dalam ribu rupiah
     tanggalMasuk = models.DateField(auto_now_add=True)
     # statss = [
     #     ('True', 'True'),
     #     ('False', 'False'),
     # ]
     status = models.BooleanField(default='True')
-    idPengadaan = models.ForeignKey(Pengadaan, on_delete=models.CASCADE)
-    # idBuah = models.ForeignKey(Buah, on_delete=models.CASCADE)
-    idBuah = models.ForeignKey(Buah, on_delete=models.CASCADE, related_name="detail_pengadaan")
+    
 
     class Meta:
         verbose_name_plural = "Detail Pengadaan"
