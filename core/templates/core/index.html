@@ -101,18 +101,36 @@
                 <span
                   class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
                   style="top: -5px; left: 15px; height: 20px; min-width: 20px"
-                  >3</span
+                  >{{ request.session.cart|length|default:0 }}</span
                 >
               </a>
-              <a href="{% url 'auth' %}" class="my-auto">
-                <i class="fas fa-user fa-2x"></i>
-              </a>
+              {% if request.session.pelanggan_id %}
+                <span class="my-auto me-3">Halo, {{ request.session.nama_pelanggan }}</span>
+                <a href="{% url 'logout_pelanggan' %}" class="btn btn-outline-secondary rounded-pill my-auto px-3 py-1">
+                  Logout
+                </a>
+              {% else %}
+                <a href="{% url 'auth' %}" class="my-auto">
+                  <i class="fas fa-user fa-2x"></i>
+                </a>
+              {% endif %}
             </div>
           </div>
         </nav>
       </div>
     </div>
     <!-- Navbar End -->
+
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="z-index: 1051; position: relative;">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- Modal Search Start -->
     <div
@@ -216,55 +234,21 @@
           </div>
         </div>
         <div class="row g-5">
-          <div class="col-lg-3 col-md-6">
+          <div class="col-lg-6 col-md-12">
             <div class="footer-item">
-              <h4 class="text-light mb-3">Why People Like us!</h4>
+              <h4 class="text-light mb-3">Tentang Gerai Buah ARB</h4>
               <p class="mb-4">
-                typesetting, remaining essentially unchanged. It was popularised
-                in the 1960s with the like Aldus PageMaker including of Lorem
-                Ipsum.
+                Gerai Buah ARB adalah penyedia buah segar pilihan terbaik dengan kualitas terjamin dan harga yang bersahabat. Kami berkomitmen untuk mendukung gaya hidup sehat Anda setiap hari.
               </p>
-              <a
-                href=""
-                class="btn border-secondary py-2 px-4 rounded-pill text-primary"
-                >Read More</a
-              >
             </div>
           </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="d-flex flex-column text-start footer-item">
-              <h4 class="text-light mb-3">Shop Info</h4>
-              <a class="btn-link" href="">About Us</a>
-              <a class="btn-link" href="">Contact Us</a>
-              <a class="btn-link" href="">Privacy Policy</a>
-              <a class="btn-link" href="">Terms & Condition</a>
-              <a class="btn-link" href="">Return Policy</a>
-              <a class="btn-link" href="">FAQs & Help</a>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="d-flex flex-column text-start footer-item">
-              <h4 class="text-light mb-3">Account</h4>
-              <a class="btn-link" href="">My Account</a>
-              <a class="btn-link" href="">Shop details</a>
-              <a class="btn-link" href="">Shopping Cart</a>
-              <a class="btn-link" href="">Wishlist</a>
-              <a class="btn-link" href="">Order History</a>
-              <a class="btn-link" href="">International Orders</a>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
+          <div class="col-lg-6 col-md-12">
             <div class="footer-item">
-              <h4 class="text-light mb-3">Contact</h4>
-              <p>Address: 1429 Netus Rd, NY 48247</p>
-              <p>Email: Example@gmail.com</p>
-              <p>Phone: +0123 4567 8910</p>
-              <p>Payment Accepted</p>
-              <img
-                src="{% static 'img/payment.png' %}"
-                class="img-fluid"
-                alt=""
-              />
+              <h4 class="text-light mb-3">Kontak Kami</h4>
+              <p><i class="fas fa-map-marker-alt me-2"></i>Jl. Buah No. 123, Indonesia</p>
+              <p><i class="fas fa-envelope me-2"></i>info@geraiarb.com</p>
+              <p><i class="fas fa-phone me-2"></i>0812-xxxx-xxxx</p>
+              <p><i class="fas fa-money-check-alt me-2"></i>Pembayaran via Bank BRI & COD</p>
             </div>
           </div>
         </div>
@@ -279,8 +263,7 @@
           <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
             <span class="text-light"
               ><a href="#"
-                ><i class="fas fa-copyright text-light me-2"></i>Your Site
-                Name</a
+                ><i class="fas fa-copyright text-light me-2"></i>Gerai Buah ARB</a
               >, All right reserved.</span
             >
           </div>

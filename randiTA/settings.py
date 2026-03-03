@@ -57,13 +57,14 @@ ROOT_URLCONF = 'randiTA.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.kesegaran_alert',  # Freshness Alert System
             ],
         },
     },
@@ -134,6 +135,43 @@ JAZZMIN_SETTINGS = {
     "goodbye_sign": "Terima Kasih Telah Berkunjung, Sampai Jumpa Kembali",
 
     "site_logo": "img/fruits.png",
+    
+    # Custom menu links for reporting system
+    "custom_links": {
+        "core": [
+            {
+                "name": "L. Buah",
+                "url": "/admin/laporan/buah/",
+                "icon": "fas fa-file-pdf",
+                "permissions": ["core.view_buah"]
+            },
+            {
+                "name": "L. Pelanggan",
+                "url": "/admin/laporan/pelanggan/",
+                "icon": "fas fa-file-pdf",
+                "permissions": ["core.view_pelanggan"]
+            },
+            {
+                "name": "L. Pembelian",
+                "url": "/admin/laporan/pembelian/",
+                "icon": "fas fa-file-pdf",
+                "permissions": ["core.view_pembelian"]
+            },
+            {
+                "name": "L. Pemasok",
+                "url": "/admin/laporan/pemasok/",
+                "icon": "fas fa-file-pdf",
+                "permissions": ["core.view_pemasok"]
+            },
+            {
+                "name": "L. Pengadaan",
+                "url": "/admin/laporan/pengadaan/",
+                "icon": "fas fa-file-pdf",
+                "permissions": ["core.view_pengadaan"]
+            },
+        ]
+    },
+    
      "order_with_respect_to": [
         "core.Buah",         # Posisi 1
         "core.Pelanggan",     # Posisi 2

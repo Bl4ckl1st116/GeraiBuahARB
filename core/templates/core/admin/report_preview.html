@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Desktop View */
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .preview-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #28a745;
+        }
+
+        .report-header h1 {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .report-header p {
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .filter-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .table-responsive {
+            margin-top: 20px;
+        }
+
+        .table {
+            border: 1px solid #dee2e6;
+        }
+
+        .table thead th {
+            background: #28a745;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            vertical-align: middle;
+            border-color: #28a745;
+        }
+
+        .table tbody td {
+            vertical-align: middle;
+        }
+
+        .action-buttons {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 15px 0;
+            border-bottom: 2px solid #28a745;
+            margin-bottom: 20px;
+            z-index: 100;
+        }
+
+        .btn-custom {
+            padding: 10px 25px;
+            font-weight: 600;
+            border-radius: 6px;
+            margin: 0 5px;
+        }
+
+        /* Print Media */
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+
+            .preview-container {
+                max-width: 100%;
+                margin: 0;
+                padding: 20px;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .filter-section,
+            .action-buttons,
+            .no-print {
+                display: none !important;
+            }
+
+            .report-header {
+                border-bottom: 2px solid #000;
+            }
+
+            .table {
+                font-size: 10pt;
+            }
+
+            .table thead th {
+                background: #e9ecef !important;
+                color: #000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <!-- Action Buttons (Sticky) -->
+        <div class="action-buttons no-print">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/admin/" class="btn btn-secondary btn-custom">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Admin
+                </a>
+                <div>
+                    <button onclick="window.print()" class="btn btn-info btn-custom">
+                        <i class="fas fa-print"></i> Cetak Browser
+                    </button>
+                    <a href="{% url 'cetak_laporan_final' tipe %}?start_date={{ start_date }}&end_date={{ end_date }}" 
+                       class="btn btn-success btn-custom">
+                        <i class="fas fa-file-pdf"></i> Unduh PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        {% if show_date_filter %}
+        <div class="filter-section no-print">
+            <form method="GET" action="" class="row g-3">
+                <div class="col-md-4">
+                    <label for="start_date" class="form-label">
+                        <i class="fas fa-calendar"></i> Tanggal Mulai
+                    </label>
+                    <input type="date" class="form-control" id="start_date" name="start_date" 
+                           value="{{ start_date }}" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="end_date" class="form-label">
+                        <i class="fas fa-calendar"></i> Tanggal Akhir
+                    </label>
+                    <input type="date" class="form-control" id="end_date" name="end_date" 
+                           value="{{ end_date }}" required>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-filter"></i> Tampilkan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Report Header -->
+        <div class="report-header">
+            <h1>{{ title }}</h1>
+            <p>Gerai Buah ARB - Sistem Manajemen Toko Buah</p>
+            {% if start_date and end_date %}
+            <p><small>Periode: {{ start_date }} s/d {{ end_date }}</small></p>
+            {% endif %}
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">No</th>
+                        {% for col in columns %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if data_rows %}
+                        {% for row in data_rows %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            {% for cell in row %}
+                            <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="{{ columns|length|add:1 }}" class="text-center text-muted">
+                                <i class="fas fa-inbox"></i> Tidak ada data yang ditampilkan
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="text-end text-muted mt-4">
+            <small>Dicetak pada: {{ "now"|date:"d/m/Y H:i" }} WIB</small>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
