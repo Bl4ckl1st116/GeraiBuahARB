@@ -13,6 +13,7 @@
           <tr>
             <th scope="col">Produk</th>
             <th scope="col">Harga</th>
+            <th scope="col">Stok</th>
             <th scope="col">Quantity</th>
             <th scope="col">Total</th>
             <th scope="col">Aksi</th>
@@ -43,6 +44,13 @@
               </p>
               {% else %}
               <p class="mb-0">Rp. {{ item.buah.hargaBuah|intcomma }}</p>
+              {% endif %}
+            </td>
+            <td>
+              {% if item.buah.stokBuah > 0 %}
+                <span class="badge bg-success">{{ item.buah.stokBuah }} kg</span>
+              {% else %}
+                <span class="badge bg-danger">Habis</span>
               {% endif %}
             </td>
             <td>
@@ -83,7 +91,7 @@
           {% endfor %}
           {% else %}
           <tr>
-            <td colspan="5" class="text-center py-4">Keranjang Anda kosong.</td>
+          <td colspan="6" class="text-center py-4">Keranjang Anda kosong.</td>
           </tr>
           {% endif %}
         </tbody>

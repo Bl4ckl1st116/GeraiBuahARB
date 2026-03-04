@@ -95,8 +95,26 @@ def tambah_ke_keranjang(request, id_buah):
     except (ValueError, TypeError):
         quantity_to_add = 1
 
+    # Stock validation
+    try:
+        buah_obj = Buah.objects.get(idBuah=id_buah)
+    except Buah.DoesNotExist:
+        messages.error(request, 'Buah tidak ditemukan')
+        return redirect(request.META.get('HTTP_REFERER', 'buah'))
+
+    stok = buah_obj.stokBuah
     current_quantity = cart.get(buah_id_str, 0)
-    cart[buah_id_str] = current_quantity + quantity_to_add
+    new_quantity = current_quantity + quantity_to_add
+
+    if stok <= 0:
+        messages.error(request, f'Stok {buah_obj.namaBuah} sudah habis')
+        return redirect(request.META.get('HTTP_REFERER', 'buah'))
+
+    if new_quantity > stok:
+        messages.error(request, f'Stok {buah_obj.namaBuah} tidak mencukupi. Stok tersedia: {stok} kg, di keranjang: {current_quantity} kg')
+        return redirect(request.META.get('HTTP_REFERER', 'buah'))
+
+    cart[buah_id_str] = new_quantity
     
     request.session['cart'] = cart
     messages.success(request, f'Berhasil menambahkan {quantity_to_add} item ke keranjang')
@@ -241,6 +259,15 @@ def update_cart(request, id_buah, action):
     
     if buah_id_str in cart:
         if action == 'tambah':
+            # Stock validation before incrementing
+            try:
+                buah_obj = Buah.objects.get(idBuah=id_buah)
+                stok = buah_obj.stokBuah
+                if cart[buah_id_str] + 1 > stok:
+                    messages.error(request, f'Stok {buah_obj.namaBuah} tidak mencukupi. Stok tersedia: {stok} kg')
+                    return redirect('keranjang')
+            except Buah.DoesNotExist:
+                pass
             cart[buah_id_str] += 1
         elif action == 'kurang':
             cart[buah_id_str] -= 1

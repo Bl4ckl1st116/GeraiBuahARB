@@ -69,9 +69,9 @@
                                     <h4 class="mb-2">Rp. {{ b.hargaBuah|intcomma }}</h4>
                                     <p class="mb-2">
                                         {% if b.stokBuah > 0 %}
-                                            <span class="text-success">Tersedia</span>
+                                            <span class="badge bg-success"><i class="fas fa-box me-1"></i>Stok: {{ b.stokBuah }} kg</span>
                                         {% else %}
-                                            <span class="text-danger">Habis</span>
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle me-1"></i>Habis</span>
                                         {% endif %}
                                     </p>
                                     
@@ -84,9 +84,9 @@
                                                         <i class="fa fa-minus"></i>
                                                     </button>
                                                 </div>
-                                                <input type="number" name="qty" class="form-control form-control-sm text-center border-0 bg-transparent" value="1" min="1" style="box-shadow: none; min-width: 60px; text-align: center; padding: 5px;">
+                                                <input type="number" name="qty" class="form-control form-control-sm text-center border-0 bg-transparent" value="1" min="1" max="{{ b.stokBuah }}" style="box-shadow: none; min-width: 60px; text-align: center; padding: 5px;">
                                                 <div class="input-group-btn">
-                                                    <button type="button" class="btn btn-sm btn-plus rounded-circle bg-light border" onclick="event.preventDefault(); event.stopImmediatePropagation(); var inp = this.closest('.quantity').querySelector('input'); var val = parseInt(inp.value); inp.value = val + 1;">
+                                                    <button type="button" class="btn btn-sm btn-plus rounded-circle bg-light border" onclick="event.preventDefault(); event.stopImmediatePropagation(); var inp = this.closest('.quantity').querySelector('input'); var val = parseInt(inp.value); var max = parseInt(inp.max) || 9999; if(val < max) { inp.value = val + 1; }">
                                                         <i class="fa fa-plus"></i>
                                                     </button>
                                                 </div>
