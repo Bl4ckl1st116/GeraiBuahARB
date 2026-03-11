@@ -8,6 +8,15 @@
   <div class="container py-5 mt-5">
     <h1 class="mb-4 mt-5">Katalog Buah</h1>
 
+    {% if search_query %}
+    <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert">
+      <span><i class="fas fa-search me-2"></i>Hasil pencarian untuk: <strong>"{{ search_query }}"</strong> — {{ buah_list|length }} buah ditemukan</span>
+      <a href="{% url 'buah' %}" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-times me-1"></i>Hapus Pencarian
+      </a>
+    </div>
+    {% endif %}
+
     <div class="owl-carousel vegetable-carousel justify-content-center">
       {% for b in buah_list %}
       <div
@@ -18,6 +27,7 @@
             src="{{ b.fotoBuah.url }}"
             class="img-fluid w-100 rounded-top"
             alt="{{ b.namaBuah }}"
+            style="width: 600px; height: 200px; object-fit: cover;"
           />
           {% if b.diskon_persen > 0 %}
           <span
@@ -115,6 +125,7 @@
                       src="{{ b.fotoBuah.url }}"
                       class="img-fluid w-100 rounded-top"
                       alt="{{ b.namaBuah }}"
+                      style="width: 600px; height: 200px; object-fit: cover;"
                     />
                     {% if b.diskon_persen > 0 %}
                     <span

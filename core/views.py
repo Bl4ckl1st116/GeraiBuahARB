@@ -73,7 +73,11 @@ def index(request):
     return render(request, 'core/home.html', {'bestseller_list': bestseller_list})
 
 def buah(request):
-    buah_list = Buah.objects.all()
+    query = request.GET.get('q', '').strip()
+    if query:
+        buah_list = Buah.objects.filter(namaBuah__icontains=query)
+    else:
+        buah_list = Buah.objects.all()
     for b in buah_list:
         if b.diskon:
             b.harga_setelah_diskon = b.hargaBuah - (b.hargaBuah * b.diskon)
@@ -81,7 +85,7 @@ def buah(request):
         else:
             b.harga_setelah_diskon = b.hargaBuah
             b.diskon_persen = 0
-    return render(request, 'core/buah.html', {'buah_list': buah_list})
+    return render(request, 'core/buah.html', {'buah_list': buah_list, 'search_query': query})
 
 
 def tambah_ke_keranjang(request, id_buah):
